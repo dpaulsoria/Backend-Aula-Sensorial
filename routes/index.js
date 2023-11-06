@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const userRouter = require("./users");
+const userRouter = require("./user");
 
 /* GET home page. */
 router.get('/', function(req, res, next) {

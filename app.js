@@ -5,10 +5,16 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require("cors");
 const corsOptions = require("./config/cors");
+const swaggerUI = require("swagger-ui-express");
+const swaggerDocument = require("./config/swagger");
 
 const indexRouter = require('./routes/index');
 
 const app = express();
+
+
+// Swagger Server
+app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
