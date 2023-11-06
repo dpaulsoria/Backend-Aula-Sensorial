@@ -1,20 +1,31 @@
-const { DataTypes } = require("sequelize");
+const { Model, DataTypes } = require("sequelize");
 const sequelize = require("../config/sequelize-config");
 
-const Classroom = sequelize.define("Classroom", {
-  classroom_id: {
-    type: DataTypes.NUMBER,
-    autoIncrement: true,
-    allowNull: false,
-  },
-  name: {
-    type: DataTypes.STRING(100),
-    allowNull: false,
-  },
-  description: {
-    type: DataTypes.STRING(100),
-    allowNull: true,
-  },
-});
+class CLASSROOM extends Model {}
 
-module.exports = Classroom;
+CLASSROOM.init(
+  {
+    CLASSROOM_ID: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      allowNull: false,
+      autoIncrement: true,
+    },
+    NAME: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    DESCRIPTION: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+  },
+  {
+    sequelize,
+    modelName: "CLASSROOM",
+    tableName: "CLASSROOM",
+    timestamps: true
+  }
+);
+
+module.exports = CLASSROOM;

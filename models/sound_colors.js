@@ -1,39 +1,35 @@
 const { Model, DataTypes } = require("sequelize");
 const sequelize = require("../config/sequelize-config");
 
-class USER extends Model {}
+class SOUND_COLORS extends Model {}
 
-USER.init(
+SOUND_COLORS.init(
   {
-    USER_ID: {
+    OBJECT_ID: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       allowNull: false,
       autoIncrement: true,
     },
-    USER: {
+    COLOR: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
-    PASSWORD: {
+    SOUND: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
-    NAME: {
+    STATUS: {
       type: DataTypes.STRING,
-      allowNull: false,
-    },
-    LASTNAME: {
-      type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
   },
   {
     sequelize,
-    modelName: "USER",
-    tableName: "USER",
-    timestamps: true, 
+    modelName: "SOUND_COLORS",
+    tableName: "SOUND_COLORS",
+    timestamps: true,
   }
 );
 
-module.exports = USER;
+module.exports = SOUND_COLORS;

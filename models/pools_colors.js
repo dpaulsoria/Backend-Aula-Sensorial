@@ -1,9 +1,9 @@
 const { Model, DataTypes } = require("sequelize");
 const sequelize = require("../config/sequelize-config");
 
-class SYSTEM extends Model {}
+class POOLS_COLORS extends Model { }
 
-SYSTEM.init(
+POOLS_COLORS.init(
   {
     OBJECT_ID: {
       type: DataTypes.INTEGER,
@@ -15,13 +15,17 @@ SYSTEM.init(
       type: DataTypes.STRING,
       allowNull: true,
     },
+    COLOR: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
   },
   {
     sequelize,
-    modelName: "SYSTEM",
-    tableName: "SYSTEM",
-    timestamps: false,
+    modelName: "POOLS_COLORS",
+    tableName: "POOLS_COLORS",
+    timestamps: true,
   }
 );
 
-module.exports = SYSTEM;
+module.exports = POOLS_COLORS;

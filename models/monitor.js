@@ -1,24 +1,34 @@
-const { DataTypes } = require("sequelize");
+const { DataTypes, Model } = require("sequelize");
 const sequelize = require("../config/sequelize-config");
 
-const Monitor = sequelize.define("Monitor", {
-  monitor_id: {
-    type: DataTypes.NUMBER,
-    autoIncrement: true,
-    allowNull: false,
-  },
-  user_classroom_access_id: {
-    type: DataTypes.NUMBER,
-    allowNull: true,
-  },
-  login_time: {
-    type: DataTypes.DATE,
-    allowNull: false,
-  },
-  logout_time: {
-    type: DataTypes.DATE,
-    allowNull: false,
-  },
-});
+class MONITOR extends Model {}
 
-module.exports = Monitor;
+MONITOR.init(
+  {
+    MONITOR_ID: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    USER_CLASSROOM_ACCESS_ID: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    LOGIN_TIME: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
+    LOGOUT_TIME: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
+  },
+  {
+    sequelize,
+    modelName: "MONITOR",
+    tableName: "MONITOR",
+    timestamps: true,
+  }
+);
+
+module.exports = MONITOR;

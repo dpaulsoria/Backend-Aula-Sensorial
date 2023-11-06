@@ -1,26 +1,31 @@
-const { DataTypes } = require("sequelize");
+const { Model, DataTypes } = require("sequelize");
 const sequelize = require("../config/sequelize-config");
 
-const Access = sequelize.define("Access", {
-    access_id: {
-        type: DataTypes.NUMBER,
-        autoIncrement: true,
-        allowNull:false
-    },
-    description: {
-        type: DataTypes.STRING(10),
-        allowNull:true
-    },
-    object_id: {
-        type: DataTypes.NUMBER,
-        allowNull: true
-    }
-});
+class ACCESS extends Model {}
 
-module.exports = Access;
+ACCESS.init(
+  {
+    ACCESS_ID: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      allowNull: false,
+      autoIncrement: true,
+    },
+    ACCESS_DESCRIPTION: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    OBJECT_ID: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+  },
+  {
+    sequelize,
+    modelName: "ACCESS",
+    tableName: "ACCESS",
+    timestamps: true,
+  }
+);
 
-/**
- * Esta tabla almacena la información de los accesos, es decir aquí se encuentra a que modulo
-pertenece el acceso, esto lo hace mediante el id_objeto de los módulos que tienen que ser
-únicos (tipo una dirección MAC).
- */
+module.exports = ACCESS;
