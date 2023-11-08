@@ -3,7 +3,7 @@ var router = express.Router();
 
 const db = require('../models').USER;
 
-/**
+/** Este es un ejemplo de Documentacion en Swagger
  * @swagger
  * /user:
  *  get:
