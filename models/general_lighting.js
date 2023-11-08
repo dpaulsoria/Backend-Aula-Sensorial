@@ -1,9 +1,9 @@
 const { Model, DataTypes } = require("sequelize");
 const sequelize = require("../config/sequelize-config");
 
-class GENERAL_LIGHTINIG extends Model {}
+class GENERAL_LIGHTING extends Model {}
 
-GENERAL_LIGHTINIG.init(
+GENERAL_LIGHTING.init(
   {
     OBJECT_ID: {
       type: DataTypes.INTEGER,
@@ -18,10 +18,10 @@ GENERAL_LIGHTINIG.init(
   },
   {
     sequelize,
-    modelName: "GENERAL_LIGHTINIG",
-    tableName: "GENERAL_LIGHTINIG",
+    modelName: "GENERAL_LIGHTING",
+    tableName: "GENERAL_LIGHTING",
     timestamps: true,
   }
 );
 
-module.exports = GENERAL_LIGHTINIG;
+module.exports = GENERAL_LIGHTING;

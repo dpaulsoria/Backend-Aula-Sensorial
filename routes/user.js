@@ -1,7 +1,7 @@
-var express = require('express');
+var express = require("express");
 var router = express.Router();
 
-const db = require('../models').USER;
+const db = require("../models").USER;
 
 /** Este es un ejemplo de Documentacion en Swagger
  * @swagger
@@ -50,7 +50,7 @@ const db = require('../models').USER;
  *                totalCount:
  *                  type: integer
  *            examples:
- *              application/json: 
+ *              application/json:
  *                - page: 1
  *                  limit: 10
  *                  totalPages: 5
@@ -60,7 +60,7 @@ const db = require('../models').USER;
  *        description: Entrada inválida
  *      500:
  *        description: Error en el servidor
- * 
+ *
  * components:
  *  schemas:
  *    User:
@@ -76,11 +76,21 @@ const db = require('../models').USER;
  *          format: email
  */
 
-router.get('/', function (req, res, next) {
+router.get("/", function (req, res, next) {
   let users = db.findAll();
   res.json({
-    users
-  })
+    users,
+  });
+});
+
+router.get("/id/:id", function (req, res, next) {
+  let user_id = req.params.id;
+  let user = db.findOne({ id: user_id });
+  res.json(user);
+});
+
+router.post("", function (req, res, next) {
+  
 });
 
 module.exports = router;
