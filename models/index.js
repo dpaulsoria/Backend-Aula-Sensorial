@@ -109,13 +109,13 @@ USER_CLASSROOM_ACCESS.hasOne(MONITOR, {
 })
 
 // // Sincroniza los modelos con la base de datos al inicio
-// sequelize
-//   .sync()
-//   .then(() => {
-//     console.log("Tablas creadas en la base de datos.");
-//   })
-//   .catch((error) => {
-//     console.error("Error al sincronizar la base de datos:", error);
-//   });
+sequelize
+  .sync()
+  .then(() => {
+    console.log("Tablas creadas en la base de datos.");
+      })
+  .catch((error) => {
+    console.error("Error al sincronizar la base de datos:", error);
+});
 
 module.exports = db;
