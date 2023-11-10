@@ -9,9 +9,12 @@ const swaggerUI = require("swagger-ui-express");
 const swaggerDocument = require("./config/swagger");
 
 const indexRouter = require('./routes/index');
+const port = process.env.PORT || 3000; 
 
 const app = express();
 
+// set port
+app.set("port", port);
 
 // Swagger Server
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerDocument));
