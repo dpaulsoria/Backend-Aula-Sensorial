@@ -2,6 +2,10 @@ var express = require("express");
 var router = express.Router();
 
 const db = require("../models").USER;
+const userRepository = require("../repositories/userRepository");
+// importamos y usamos el middleware de autorizacion
+const authMiddleware = require("../middlewares/authMiddleware");
+router.use(authMiddleware);
 
 /** Este es un ejemplo de Documentacion en Swagger
  * @swagger
@@ -76,11 +80,8 @@ const db = require("../models").USER;
  *          format: email
  */
 
-router.get("/", function (req, res, next) {
-  let users = db.findAll();
-  res.json({
-    users,
-  });
+router.get("/", async function (req, res, next) {
+  res.json(await userRepository.getAllUsers());
 });
 
 router.get("/id/:id", function (req, res, next) {

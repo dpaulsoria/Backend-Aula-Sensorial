@@ -1,9 +1,45 @@
+/**
+ * @swagger
+ * tags:
+ *   name: Authentication
+ *   description: API endpoints for user authentication
+ */
+
 const express = require("express");
 const router = express.Router();
+const UserRepository = require("../repositories/userRepository");
+const AuthService = require("../services/authService");
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-const userModel = require("../models").USER;
 
+/**
+ * @swagger
+ * /auth/login:
+ *    post:
+ *      summary: Authenticate user and generate tokens
+ *      tags: [Authentication]
+ *      requestBody:
+ *        required: true
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                user:
+ *                  type: string
+ *                  description: Username
+ *                password:
+ *                  type: string
+ *                  description: User password
+ *      responses:
+ *        '200':
+ *          description: Successful login
+ *        '401':
+ *          description: Invalid credentials
+ *        '404':
+ *          description: User does not exist
+ *        '500':
+ *          description: Internal Server Error
+ */
 router.post("/login", async (req, res) => {
   try {
     if (!req.body.user || !req.body.password) {
@@ -12,11 +48,7 @@ router.post("/login", async (req, res) => {
         .send({ message: 'fields "user" and "password" is required' });
     }
 
-    const user = await userModel.findOne({
-      where: {
-        user: req.body.user,
-      },
-    });
+    const user = await UserRepository.getByUser(req.body.user);
 
     if (!user) {
       res.status(404).send("User does not exist!");
@@ -27,22 +59,59 @@ router.post("/login", async (req, res) => {
       );
 
       if (isPasswordValid) {
-        const accessToken = generateAccessToken(user);
-        const refreshToken = generateRefreshToken(user);
-        res.json({ accessToken:accessToken, refreshToken:refreshToken });
+        const accessToken = AuthService.generateAccessToken(user);
+        const refreshToken = AuthService.generateRefreshToken(user);
+        res.json({
+          accessToken: accessToken,
+          refreshToken: refreshToken,
+        });
       } else {
-        res.status(401).send("Password Incorrect!");
+        res.status(401).send({
+          msg: "Password Incorrect",
+        });
       }
     }
   } catch (error) {
     console.error(error);
     res.status(500).json({
       msg: "Internal Server Error",
-      request: req.body,
     });
   }
 });
 
+/**
+ * @swagger
+ * /auth/register:
+ *    post:
+ *      summary: Register a new user
+ *      tags: [Authentication]
+ *      requestBody:
+ *        required: true
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                user:
+ *                  type: string
+ *                  description: Username
+ *                password:
+ *                  type: string
+ *                  description: User password
+ *                name:
+ *                  type: string
+ *                  description: User's first name
+ *                lastname:
+ *                  type: string
+ *                  description: User's last name
+ *      responses:
+ *        '201':
+ *          description: User registered successfully
+ *        '400':
+ *          description: All fields are required or User already exists
+ *        '500':
+ *          description: Internal Server Error
+ */
 router.post("/register", async (req, res) => {
   try {
     if (
@@ -55,24 +124,20 @@ router.post("/register", async (req, res) => {
     }
 
     // Verifica si el usuario ya existe en la base de datos
-    const existingUser = await userModel.findOne({
-      where: { user: req.body.user },
-    });
+    const existingUser = await UserRepository.getByUser(req.body.user);
 
     if (existingUser) {
       return res.status(400).json({ message: "User already exists" });
     }
 
-    // Hash de la contraseña antes de almacenarla en la base de datos
-    const hashedPassword = await bcrypt.hash(req.body.password, 10);
-
-    // Crea un nuevo usuario en la base de datos
-    const newUser = await userModel.create({
+    data = {
       USER: req.body.user,
-      PASSWORD: hashedPassword,
+      PASSWORD: req.body.password,
       NAME: req.body.name,
       LASTNAME: req.body.lastname,
-    });
+    };
+
+    newUser = await UserRepository.create(data);
 
     res.status(201).json({ message: "User registered successfully" });
   } catch (error) {
@@ -81,28 +146,25 @@ router.post("/register", async (req, res) => {
   }
 });
 
-// accessTokens
-function generateAccessToken(user) {
-  const payload = {
-    id: user.ID,
-    user: user.USER,
-  };
+//REFRESH TOKEN API
+router.post("/refreshToken", (req, res) => {
+  if (!refreshTokens.includes(req.body.token))
+    res.status(400).send("Refresh Token Invalid");
+  refreshTokens = refreshTokens.filter((c) => c != req.body.token);
+  //remove the old refreshToken from the refreshTokens list
+  const accessToken = generateAccessToken({ user: req.body.name });
+  const refreshToken = generateRefreshToken({ user: req.body.name });
+  //generate new accessToken and refreshTokens
+  res.json({ accessToken: accessToken, refreshToken: refreshToken });
+});
 
-  return jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "15m" });
-}
-// refreshTokens
-let refreshTokens = [];
-function generateRefreshToken(user) {
-  const payload = {
-    id: user.ID,
-    user: user.USER,
-  };
-
-  const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, {
-    expiresIn: "20m",
+router.delete("/logout", (req, res) => {
+  refreshTokens = refreshTokens.filter((c) => c != req.body.token);
+  res.status(204).send({
+    msg: "Logged out!",
   });
-  refreshTokens.push(refreshToken);
-  return refreshToken;
-}
+});
+
+
 
 module.exports = router;

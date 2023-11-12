@@ -1,5 +1,5 @@
 const swaggerJsdoc = require("swagger-jsdoc");
-
+//TODO swagger realiza las consultas en la ruta api-docs de forma incorrecta
 const options = {
   definition: {
     openapi: "3.0.0",
@@ -10,7 +10,7 @@ const options = {
     },
     servers: [
       {
-        url: `${process.env.DEV_HOST || "localhost"}:${process.env.PORT || "3000"}`,
+        url: `${process.env.DEV_HOST || "localhost"}`,
       },
     ],
     },
