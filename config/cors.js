@@ -1,6 +1,9 @@
 require("dotenv").config();
 
+const { config } = require("../config/config");
+const env = process.env.NODE_ENV;
+
 module.exports = {
-    origin: process.env.DEV_HOST || "localhost",
+    origin: config[env].host || "localhost",
     optionsSuccessStatus: 200
 }

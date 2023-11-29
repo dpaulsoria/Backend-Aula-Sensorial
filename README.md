@@ -12,13 +12,34 @@ Descripcion de la API
 4. Asegurarse de tener instalados los paquetes `mysql2`, `sequelize` y `sequelize-cli` tanto de forma local a nivel de proyecto, como de forma global en la PC con este comando `npm i -g mysql2 sequelize sequelize-cli` y `npm  i mysql2 sequelize sequelize-cli`
 5. Asegurarse de tener el .env correspondiente. Recordar utilizar los valores apropiados.
     ```
-    DB_USER=root
-    DB_PASSWORD=root
-    DB_NAME=aula_sensorial
-    DEV_HOST=localhost
-    TEST_HOST=localhost
-    PROD_HOST=localhost
+    ACCESS_TOKEN_SECRET=secret
+    ACCESS_TOKEN_TIME=15m
+    REFRESH_TOKEN_SECRET=secret
+
+    # Para el entorno de desarrollo
+    DEV_DB_NAME=aula_sensorial
+    DEV_DB_USER=root
+    DEV_DB_PASSWORD=secret
+    DEV_DB_HOST=localhost
+
+    # Para el entorno de pruebas
+    TEST_DB_NAME=nombre_bd_pruebas
+    TEST_DB_USER=usuario_pruebas
+    TEST_DB_PASSWORD=contraseña_pruebas
+    TEST_DB_HOST=host_pruebas
+
+    # Para el entorno de producción
+    PROD_DB_NAME=aula_sensorial
+    PROD_DB_USER=klaeoeiwyw
+    PROD_DB_PASSWORD=secret
+    PROD_DB_HOST=aula-sensorial-server.mysql.database.azure.com
+
+    NODE_ENV=development
     PORT=3000
+
+    DEFAULT_USER=admin
+    DEFAULT_USER_PASSWORD=secret
+
     ```
 6. Si el motor de base de datos esta instalado correctamente y el .env es el adecuado, empezar con crear la base de datos con `npm run create`. Recordar que tambien esta el comando `npm run drop` y `npm run migrate`.
 7. Correr la Main API con `npm run dev`
