@@ -13,7 +13,7 @@ const options = {
     },
     servers: [
       {
-        url: `${config[env].host || "localhost"}`,
+        url: `${config[env].host || "127.0.0.1"}`,
       },
     ],
     },
