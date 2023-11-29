@@ -1,6 +1,6 @@
 const swaggerJsdoc = require("swagger-jsdoc");
 //TODO swagger realiza las consultas en la ruta api-docs de forma incorrecta
-const { config } = require("../config/config");
+const config = require("../config/config");
 const env = process.env.NODE_ENV;
 
 const options = {
