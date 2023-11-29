@@ -7,7 +7,8 @@
     "dev": "nodemon ./bin/www",
     "create": "npx sequelize-cli db:create",
     "drop": "npx sequelize-cli db:drop",
-    "migrate": "npx sequelize-cli db:migrate"
+    "migrate": "npx sequelize-cli db:migrate",
+    "testdbcon": "node ./test/test_db_connection.js"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
