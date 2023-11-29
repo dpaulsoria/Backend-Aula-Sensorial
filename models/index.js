@@ -110,40 +110,15 @@ USER_CLASSROOM_ACCESS.hasOne(MONITOR, {
 })
 
 // Crear un usuario por defecto al iniciar el servidor
-const createDefaultUser = async () => {
-  try {
-    const defaultUser = {
-      USER: process.env.DEFAULT_USER || "admin",
-      PASSWORD: await bcrypt.hash(process.env.DEFAULT_USER_PASS || "admin", 10), // Encripta la contraseña
-      NAME: "Administrador",
-      LASTNAME: "Administrador",
-    };
-
-    const user = await USER.findOne({
-      where: {
-        user: defaultUser.USER
-      },
-    });
-
-    if(!user){
-      console.log('Creando Usuario Default');
-      await USER.create(defaultUser);
-      console.log("Usuario por defecto creado con éxito.");
-    }
-  } catch (error) {
-    console.error("Error al crear el usuario por defecto:", error);
-  }
-};
-
 // // Sincroniza los modelos con la base de datos al inicio
-sequelize
-  .sync()
-  .then(() => {
-    console.log("Tablas creadas en la base de datos.");
-    createDefaultUser();
-  })
-  .catch((error) => {
-    console.error("Error al sincronizar la base de datos:", error);
-});
+// sequelize
+//   .sync()
+//   .then(() => {
+//     console.log("Tablas creadas en la base de datos.");
+//     createDefaultUser();
+//   })
+//   .catch((error) => {
+//     console.error("Error al sincronizar la base de datos:", error);
+// });
 
 module.exports = db;

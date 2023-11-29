@@ -1,8 +1,10 @@
-'use strict';
+"use strict";
 
-/** @type {import('sequelize-cli').Migration} */
+const bcrypt = require("bcryptjs"); // Asegúrate de que bcryptjs esté instalado
+
 module.exports = {
-  async up (queryInterface, Sequelize) {
+  async up(queryInterface, Sequelize) {
+    // Crear la tabla USER
     await queryInterface.createTable("USER", {
       USER_ID: {
         type: Sequelize.INTEGER,
@@ -39,9 +41,24 @@ module.exports = {
         ),
       },
     });
+
+    // Insertar el usuario por defecto
+    const defaultPassword = process.env.DEFAULT_USER_PASS || "admin"; // Usa una contraseña más segura en un entorno real
+    const hashedPassword = await bcrypt.hash(defaultPassword, 10);
+
+    await queryInterface.bulkInsert("USER", [
+      {
+        USER: process.env.DEFAULT_USER || "admin",
+        PASSWORD: hashedPassword,
+        NAME: "Administrador",
+        LASTNAME: "Administrador",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+    ]);
   },
 
-  async down (queryInterface, Sequelize) {
+  async down(queryInterface, Sequelize) {
     await queryInterface.dropTable("USER");
-  }
+  },
 };
