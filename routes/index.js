@@ -5,6 +5,7 @@ const swaggerSpec = require('../config/swagger'); // Ruta correcta a tu archivo 
 
 const userRouter = require("./user");
 const authRouter = require("./auth");
+const fileRouter = require("./fileRoutes")
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -14,6 +15,8 @@ router.get('/', function(req, res, next) {
 router.use("/user", userRouter);
 
 router.use("/auth", authRouter);
+
+router.use("/file", fileRouter);
 
 router.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
