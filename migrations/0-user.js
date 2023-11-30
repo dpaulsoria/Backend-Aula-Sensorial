@@ -1,6 +1,6 @@
 "use strict";
 
-const bcrypt = require("bcryptjs"); // Asegúrate de que bcryptjs esté instalado
+const bcrypt = require("bcrypt"); // Asegúrate de que bcryptjs esté instalado
 
 module.exports = {
   async up(queryInterface, Sequelize) {

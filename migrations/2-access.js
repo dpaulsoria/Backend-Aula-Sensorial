@@ -15,7 +15,8 @@ module.exports = {
       },
       OBJECT_ID: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: false,
+        unique: true
       },
       createdAt: {
         allowNull: false,
