@@ -8,6 +8,10 @@ module.exports = {
         primaryKey: true,
         allowNull: false,
         autoIncrement: true,
+        references: {
+          model: "ACCESS",
+          key: "OBJECT_ID"
+        }
       },
       COLOR: {
         type: Sequelize.STRING,
