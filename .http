@@ -2,9 +2,8 @@
 @port=3000
 @url=https://studious-rotary-phone-6574rgggxg3xr9x-3000.app.github.dev
 
-@tokenKey=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiYWRtaW4iLCJpYXQiOjE3MDE3MTU5OTQsImV4cCI6MTcwMTcxNjg5NH0.s1i8fU0LIoDIrzzJUS2PqnyZuo-TM6_1tfOqYQMKdic
+@tokenKey=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiYWRtaW4iLCJpYXQiOjE3MDE3MTcxNDMsImV4cCI6MTcxMDcxNzE0M30.Edn4cHOaQmv7JX3OkMM3H-kbOQ5iVGi7YCIJEDsYLVs
 @token=Bearer {{tokenKey}}
-
 ### login
 POST {{url}}/auth/login
 Content-Type: application/json
@@ -31,6 +30,6 @@ Content-Type: application/json
 Authorization: {{token}}
 
 {
-  "STATUS": "on",
+  "STATUS": "off",
   "COLOR": "#000000"
 }

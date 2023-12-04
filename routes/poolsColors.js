@@ -5,6 +5,7 @@ const db = require("../models").USER;
 const poolsColorsRepository = require("../repositories/poolsColorsRepository");
 // importamos y usamos el middleware de autorizacion
 const authMiddleware = require("../middlewares/authMiddleware");
+const websocketMiddleware = require("../middlewares/websocketMiddleware");
 //router.use(authMiddleware);
 
 /** Este es un ejemplo de Documentacion en Swagger
@@ -83,7 +84,7 @@ router.get("/", async function (req, res, next) {
   res.json(await poolsColorsRepository.getLastValid());
 });
 
-router.put("/", async function (req, res, next) {
+router.put("/", websocketMiddleware, async function (req, res, next) {
   try {
     res.json(await poolsColorsRepository.update(req.body));
   } catch (error) {
