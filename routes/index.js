@@ -5,7 +5,8 @@ const swaggerSpec = require('../config/swagger'); // Ruta correcta a tu archivo 
 
 const userRouter = require("./user");
 const authRouter = require("./auth");
-const fileRouter = require("./fileRoutes")
+const fileRouter = require("./fileRoutes");
+const poolsColorsRouter = require("./poolsColors");
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -18,20 +19,14 @@ router.use("/auth", authRouter);
 
 router.use("/file", fileRouter);
 
+router.use("/poolsColors", poolsColorsRouter);
+
 router.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // 404 - Middleware
 router.use((req, res, next) => {
   res.status(404).send({
     msg: "404 - Not Found"
-  });
-});
-
-// Error - Middleware
-router.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).send({
-    msg: "500 - Internal Server Error",
   });
 });
 

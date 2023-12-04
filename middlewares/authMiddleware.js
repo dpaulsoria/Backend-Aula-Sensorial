@@ -2,8 +2,13 @@ const jwt = require("jsonwebtoken");
 
 function validateToken(req, res, next) {
   const authHeader = req.headers["authorization"];
-  const token = authHeader.split(" ")[1];
+  if (authHeader == null) {
+    res.sendStatus(400).send({
+      msg: "Token not present",
+    });
+  }
 
+  const token = authHeader.split(" ")[1];
   if (token == null)
     res.sendStatus(400).send({
       msg: "Token not present",
