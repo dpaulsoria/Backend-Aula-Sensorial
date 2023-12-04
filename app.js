@@ -9,7 +9,7 @@ const cors = require("cors");
 const corsOptions = require("./config/cors");
 const swaggerUI = require("swagger-ui-express");
 const swaggerDocument = require("./config/swagger");
-const WebSocket = require("ws");
+const wsServer = require("./webSocket");
 
 const indexRouter = require('./routes/index');
 const port = process.env.PORT || 3000; 
@@ -50,5 +50,7 @@ app.use(function(err, req, res, next) {
   // render the error page
   res.status(err.status || 500).json({error: err.message});
 });
+
+
 
 module.exports = app;
