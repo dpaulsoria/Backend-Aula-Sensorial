@@ -43,6 +43,13 @@ Descripcion de la API
     ```
 6. Si el motor de base de datos esta instalado correctamente y el .env es el adecuado, empezar con crear la base de datos con `npm run create`. Recordar que tambien esta el comando `npm run drop` y `npm run migrate`.
 7. Correr la Main API con `npm run dev`
+8. Con respecto al sistema de almacenamiento de archivos
+    - La carpeta de uploads debe tener ciertos permisos
+    ```
+    ❯ chmod -R 775 uploads
+    ❯ ls -l | grep uploads
+    drwxrwxr-x haze haze 4.0 KB Sat Dec  9 01:04:47 2023 uploads
+    ```
 ### Cosas que faltan
 Cómo Empezar: Ofrece una guía de inicio rápido que muestra cómo poner en marcha tu API después de la instalación.
 

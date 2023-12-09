@@ -21,7 +21,7 @@ const fileFilter = (req, file, cb) => {
         return cb(new Error("File not allowed"), false);
     }
 
-    if (file.size > maxSize * 1024 * 1024) {
+    if (file.size > maxSize) {
         return cb(new Error("File Size not allowed"), false)
     }
 
@@ -29,9 +29,9 @@ const fileFilter = (req, file, cb) => {
 };
 
 const upload = multer({
-  storage: multer.memoryStorage(),
+  storage: storage,
   fileFilter: fileFilter,
-  limits: { fileSize: maxSize * 1024 * 1024 },
+  limits: { fileSize: maxSize},
 });
 
 module.exports = upload;
