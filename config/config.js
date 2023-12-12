@@ -6,7 +6,7 @@ module.exports = {
     password: process.env.DEV_DB_PASSWORD || "root",
     database: process.env.DEV_DB_NAME || "aula_sensorial",
     host: process.env.DEV_DB_HOST || "127.0.0.1",
-    dialect: process.env.DEV_DB_DIALECT || "pot",
+    dialect: process.env.DEV_DB_DIALECT || "mysql",
     operatorAliases: false,
   },
   test: {
