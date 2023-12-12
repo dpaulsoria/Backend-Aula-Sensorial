@@ -9,11 +9,40 @@ const {
   cleanDirectory,
 } = require("../repositories/fileRepository");
 
-router.get("/", async (req, res) => {
-  res.send("Hello File");
+router.get("/list", async (req, res) => {
+  try {
+    // Auth logic
+
+    const uploadsDir = path.join(__dirname, "..", "uploads");
+    const files = await fs.promises.readdir(uploadsDir);
+    const count = files.length;
+    res.json({ files, count });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error reading uploads directory");
+  }
 });
 
-router.post("/upload", upload.single("file"), async (req, res) => {
+router.get("/byName/:filename", async (req, res) => {
+  try {
+    // Auth logic
+
+    const filename = req.params.filename;
+    // Validación adicional aquí para la seguridad del nombre del archivo
+    const filePath = path.join(__dirname, "..", "uploads", filename);
+
+    if (fs.existsSync(filePath)) {
+      res.sendFile(filePath);
+    } else {
+      res.status(404).send("File not found");
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error retrieving file");
+  }
+});
+
+router.post("/", upload.single("file"), async (req, res) => {
   try {
     // Auth logic
     if (!req.file) {
@@ -26,9 +55,7 @@ router.post("/upload", upload.single("file"), async (req, res) => {
       mimeType: req.file.mimetype,
       //   userId: req.userId, // Asegúrate de que este valor esté disponible
     });
-
-    console.log("file", req.file);
-
+    
     if (validationResult.error) {
       return res.status(400).send(validationResult.error.details[0].message);
     }
@@ -63,7 +90,7 @@ router.post("/upload", upload.single("file"), async (req, res) => {
   }
 });
 
-router.delete("/clean-uploads", (req, res) => {
+router.delete("/", (req, res) => {
   try {
     // Auth logic
 
