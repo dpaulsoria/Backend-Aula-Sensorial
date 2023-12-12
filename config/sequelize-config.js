@@ -1,27 +1,25 @@
 require("dotenv").config();
 const { Sequelize } = require("sequelize");
-const config = require("./config");
 
 const env = process.env.NODE_ENV || "production";
 
 let sequelize;
 
-if(process.env.CONECTION_STRING != ''){
+if (process.env.CONECTION_STRING !== "") {
   sequelize = new Sequelize(process.env.CONECTION_STRING, {
-    // Configuración adicional según sea necesario (ejemplo: ssl)
-    dialect: "postgres", // Tipo de base de datos (PostgreSQL en este caso)
+    dialect: "postgres",
     ssl: {
-      rejectUnauthorized: false, // Podría ser necesario dependiendo de la configuración de Render
+      rejectUnauthorized: false,
     },
   });
-}else{
+} else {
   sequelize = new Sequelize(
-    config[env].database,
-    config[env].username,
-    config[env].password,
+    process.env.DB_NAME || "nombre_base_datos",
+    process.env.DB_USER || "usuario",
+    process.env.DB_PASS || "contraseña",
     {
-      host: config[env].host,
-      dialect: config[env].dialect,
+      host: process.env.DB_HOST || "localhost",
+      dialect: "postgres",
     }
   );
 }
