@@ -9,6 +9,7 @@ if (process.env.CONECTION_STRING !== "") {
   sequelize = new Sequelize(process.env.CONECTION_STRING, {
     dialect: "postgres",
     ssl: {
+      require: true,
       rejectUnauthorized: false,
     },
   });
