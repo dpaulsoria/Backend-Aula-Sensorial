@@ -9,20 +9,16 @@ const sequelize = new Sequelize({
   storage: 'database.sqlite', // Ruta donde se guardará la base de datos SQLite
 });
 
-(async () => {
-  try {
-    await sequelize.authenticate();
-    console.log("Conexión establecida correctamente.");
-    
-    await sequelize.sync({ force: true });
+sequelize
+  .sync({ force: true })
+  .then(() => {
     console.log(
       "Modelos sincronizados correctamente (la base de datos se creó si no existía)."
     );
-
-  } catch (error) {
-    console.error("Error al conectar y sincronizar la base de datos:", error);
-  }
-})();
+  })
+  .catch((error) => {
+    console.error("Error al sincronizar modelos:", error);
+  });
 
 /* const sequelize = new Sequelize(
     process.env.DB_NAME || "nombre_base_datos",
