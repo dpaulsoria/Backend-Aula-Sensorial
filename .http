@@ -1,0 +1,49 @@
+@host=
+@port=3000
+@url=https://studious-rotary-phone-6574rgggxg3xr9x-3000.app.github.dev
+
+@tokenKey=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiYWRtaW4iLCJpYXQiOjE3MDI0OTMyODcsImV4cCI6MTcxMTQ5MzI4N30.lP93xEZ8oZ3PxriFZizHaZVx94m61SLwXHq5uRj1UQg
+
+@token=Bearer {{tokenKey}}
+
+### register
+POST {{url}}/auth/register
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "user": "admin",
+  "password": "adefault97",
+  "name": "administrador",
+  "lastname": "administrador"
+}
+
+### login
+POST {{url}}/auth/login
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "user": "admin",
+  "password": "adefault97"
+}
+
+### user
+GET {{url}}/user/
+Content-Type: application/json
+Authorization: {{token}}
+
+### poolColors
+GET {{url}}/poolsColors/
+Content-Type: application/json
+Authorization: {{token}}
+
+### poolColors PUT
+PUT {{url}}/poolsColors/
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "STATUS": "off",
+  "COLOR": "#000000"
+}

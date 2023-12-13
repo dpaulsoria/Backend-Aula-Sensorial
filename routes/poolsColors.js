@@ -2,11 +2,12 @@ var express = require("express");
 var router = express.Router();
 
 const db = require("../models").USER;
-const userRepository = require("../repositories/userRepository");
+const poolsColorsRepository = require("../repositories/poolsColorsRepository");
 // importamos y usamos el middleware de autorizacion
 const authMiddleware = require("../middlewares/authMiddleware");
-router.use(authMiddleware);
 const websocketMiddleware = require("../middlewares/websocketMiddleware");
+//router.use(authMiddleware);
+
 /** Este es un ejemplo de Documentacion en Swagger
  * @swagger
  * /user:
@@ -79,19 +80,16 @@ const websocketMiddleware = require("../middlewares/websocketMiddleware");
  *          type: string
  *          format: email
  */
-
-router.get("/",websocketMiddleware, async function (req, res, next) {
-  res.json(await userRepository.getAllUsers());
+router.get("/", async function (req, res, next) {
+  res.json(await poolsColorsRepository.getLastValid());
 });
 
-router.get("/id/:id", function (req, res, next) {
-  let user_id = req.params.id;
-  let user = db.findOne({ id: user_id });
-  res.json(user);
-});
-
-router.post("", function (req, res, next) {
-  
+router.put("/", websocketMiddleware, async function (req, res, next) {
+  try {
+    res.json(await poolsColorsRepository.update(req.body));
+  } catch (error) {
+    next(error);
+  }
 });
 
 module.exports = router;

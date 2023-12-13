@@ -1,8 +1,11 @@
 const User = require("../models/user");
+const bcrypt = require("bcrypt");
 
 class UserRepository {
   static async getAllUsers() {
-    return User.findAll();
+    return User.findAll({
+      attributes: { exclude: ["PASSWORD"] },
+    });
   }
 
   static async getByUser(username){
