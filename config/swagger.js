@@ -12,11 +12,13 @@ const options = {
       version: "1.0.0",
       description: "...",
     },
+    /*
     servers: [
       {
         url: `${config[env].host || "127.0.0.1"}`,
       },
     ],
+     */
   },
   apis: ["./routes/*.js"],
 };

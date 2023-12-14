@@ -6,7 +6,7 @@ const userRepository = require("../repositories/userRepository");
 // importamos y usamos el middleware de autorizacion
 const authMiddleware = require("../middlewares/authMiddleware");
 router.use(authMiddleware);
-const websocketMiddleware = require("../middlewares/websocketMiddleware");
+
 /** Este es un ejemplo de Documentacion en Swagger
  * @swagger
  * /user:
@@ -80,7 +80,7 @@ const websocketMiddleware = require("../middlewares/websocketMiddleware");
  *          format: email
  */
 
-router.get("/",websocketMiddleware, async function (req, res, next) {
+router.get("/", async function (req, res, next) {
   res.json(await userRepository.getAllUsers());
 });
 
