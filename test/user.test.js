@@ -16,6 +16,7 @@ let testUser = {
 };
 
 let id = "";
+let testToken = "";
 
 // Todas las pruebas van a fallar si hay un usuario llamado `testuser`
 
@@ -55,6 +56,7 @@ describe("User API Tests", () => {
 
     expect(response.body.message).toBe("Login successful");
     expect(response.body).toHaveProperty("token");
+    testToken = response.body.token;
   });
 
   it("should fail to login with invalid credentials", async () => {
@@ -80,6 +82,38 @@ describe("User API Tests", () => {
       .expect(401);
 
     expect(response.body.message).toBe("Invalid credentials");
+  });
+
+  it("should refresh token successfully", async () => {
+    const refreshToken = testToken;
+
+    const response = await request(app)
+      .post("/user/refreshToken")
+      .send({ token: refreshToken });
+    expect(response.statusCode).toBe(200);
+    expect(response.body).toHaveProperty("accessToken");
+    expect(response.body).toHaveProperty("refreshToken");
+    testToken = response.body.refreshToken;
+  });
+
+  it("should fail with invalid refresh token", async () => {
+    const invalidToken = "token_inválido";
+
+    const response = await request(app)
+      .post("/user/refreshToken")
+      .send({ token: invalidToken });
+
+    expect(response.statusCode).toBe(400);
+  });
+
+  it("should log out user successfully", async () => {
+    const refreshToken = testToken;
+
+    const response = await request(app)
+      .delete("/user/logout")
+      .send({ token: refreshToken });
+
+    expect(response.statusCode).toBe(204);
   });
 
   it("should delete a user", async () => {

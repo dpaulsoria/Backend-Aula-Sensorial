@@ -44,6 +44,10 @@ const options = {
               type: "string",
               description: "Apellido del usuario",
             },
+            token: {
+              type: "string",
+              description: "Token de verificacion LOGIN"
+            }
           },
         },
         Device: {

@@ -16,30 +16,24 @@ const jwt = require("jsonwebtoken");
  * @swagger
  * /user/login:
  *   post:
- *     tags:
- *       - user
- *     summary: Iniciar sesión
- *     description: Permite a un usuario iniciar sesión proporcionando su nombre de usuario y contraseña.
+ *     summary: Inicio de sesión de usuario
+ *     description: Inicia sesión de un usuario y devuelve un token de acceso.
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             type: object
- *             required:
- *               - user
- *               - password
  *             properties:
  *               user:
  *                 type: string
  *                 description: Nombre de usuario.
  *               password:
  *                 type: string
- *                 format: password
  *                 description: Contraseña del usuario.
  *     responses:
  *       200:
- *         description: Sesión iniciada con éxito. Devuelve un token de acceso.
+ *         description: Inicio de sesión exitoso. Devuelve un token.
  *         content:
  *           application/json:
  *             schema:
@@ -47,14 +41,33 @@ const jwt = require("jsonwebtoken");
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Login successful
+ *                   description: Mensaje de éxito.
  *                 token:
  *                   type: string
- *                   description: Token de acceso que debe incluirse en las solicitudes posteriores.
+ *                   description: Token de acceso generado.
  *       401:
- *         description: Credenciales de inicio de sesión no válidas.
+ *         description: Credenciales inválidas. El inicio de sesión ha fallado.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   description: Mensaje de error.
  *       500:
- *         description: Error interno del servidor.
+ *         description: Error interno del servidor al intentar iniciar sesión.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   description: Mensaje de error.
+ *                 error:
+ *                   type: string
+ *                   description: Descripción del error interno.
  */
 
 router.post("/login", async function (req, res, next) {
@@ -79,12 +92,113 @@ router.post("/login", async function (req, res, next) {
       }
     );
 
+    // Actualiza el campo 'token' en el usuario
+    await User.findOneAndUpdate({ user }, { token });
+
     return res.status(200).json({ message: "Login successful", token });
   } catch (error) {
     return res
       .status(500)
       .json({ message: "Error during login", error: error.message });
   }
+});
+
+/**
+ * @swagger
+ * /refreshToken:
+ *   post:
+ *     summary: Renovación de Token de Acceso
+ *     description: Renueva el token de acceso y proporciona un nuevo token de acceso y un token de actualización.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               token:
+ *                 type: string
+ *                 description: Token de actualización válido.
+ *     responses:
+ *       200:
+ *         description: Token de acceso y token de actualización renovados con éxito.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 accessToken:
+ *                   type: string
+ *                   description: Nuevo token de acceso.
+ *                 refreshToken:
+ *                   type: string
+ *                   description: Nuevo token de actualización.
+ *       400:
+ *         description: Token de actualización inválido o no encontrado.
+ *         content:
+ *           text/plain:
+ *             schema:
+ *               type: string
+ *               example: Refresh Token Invalid
+ */
+
+router.post("/refreshToken", async (req, res) => {
+  const { token } = req.body;
+
+  const user = await User.findOne({ token }).select("-password");
+
+  // Verifica si el token de actualización es válido
+  if (!user || token !== user.token) {
+    return res.status(400).send("Refresh Token Invalid");
+  }
+
+  // Genera un nuevo token de acceso y un nuevo token de actualización
+  const newAccessToken = jwt.sign(
+    { userId: user._id },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: "1h",
+    }
+  );
+  const newRefreshToken = jwt.sign(
+    { userId: user._id },
+    process.env.REFRESH_TOKEN_SECRET
+  );
+
+  // Actualiza el token de actualización en la base de datos
+  await User.updateOne({ _id: user._id }, { token: newRefreshToken });
+
+  // Envía los nuevos tokens al cliente
+  res.json({ accessToken: newAccessToken, refreshToken: newRefreshToken });
+});
+
+/**
+ * @swagger
+ * /user/logout:
+ *   delete:
+ *     summary: Cerrar sesión del usuario e invalidar el token de actualización
+ *     tags:
+ *       - User
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               token:
+ *                 type: string
+ *                 description: Token de actualización del usuario a invalidar
+ *     responses:
+ *       '204':
+ *         description: Sesión cerrada con éxito
+ *       '500':
+ *         description: Error interno del servidor
+ */
+
+router.delete("/logout", async (req, res) => {
+  await User.updateOne({ token: req.body.token }, { token: "" });
+  res.status(204).send();
 });
 
 /**
@@ -458,7 +572,7 @@ router.delete("/by-username/:username", async function (req, res, next) {
  *
  *
  *
- *         
+ *
  * @route PATCH /user/by-id/{id}/change-password
  * @group User - Operaciones sobre usuarios
  * @param {string} id.path.required - ID del usuario
