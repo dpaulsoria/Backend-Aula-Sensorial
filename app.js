@@ -16,6 +16,7 @@ const port = process.env.PORT || 3000;
 
 const app = express();
 
+app.use(express.static("public"));
 app.set("port", port);
 
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerDocument))
@@ -49,14 +50,15 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500).json({error: err.message});
 });
 
-
 // Iniciar el servidor Express
 app.listen(port, () => {
   console.log(`Servidor corriendo en http://localhost:${port}`);
 });
 
 // Conexion con la BD
-db = require('./config/mongo')
+db = process.env.DB_CON;
 mongoose.connect(db)
   .then(() => console.log('Conexión a MongoDB exitosa'))
   .catch((err) => console.error('Error al conectar con MongoDB:', err));
+
+module.exports = app;
