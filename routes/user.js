@@ -18,6 +18,8 @@ const jwt = require("jsonwebtoken");
  *   post:
  *     summary: Inicio de sesión de usuario
  *     description: Inicia sesión de un usuario y devuelve un token de acceso.
+ *     tags:
+ *       - Auth
  *     requestBody:
  *       required: true
  *       content:
@@ -109,6 +111,8 @@ router.post("/login", async function (req, res, next) {
  *   post:
  *     summary: Renovación de Token de Acceso
  *     description: Renueva el token de acceso y proporciona un nuevo token de acceso y un token de actualización.
+ *     tags:
+ *       - Auth
  *     requestBody:
  *       required: true
  *       content:
@@ -178,7 +182,7 @@ router.post("/refreshToken", async (req, res) => {
  *   delete:
  *     summary: Cerrar sesión del usuario e invalidar el token de actualización
  *     tags:
- *       - User
+ *       - Auth
  *     requestBody:
  *       required: true
  *       content:

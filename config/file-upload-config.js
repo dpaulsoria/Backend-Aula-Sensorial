@@ -8,7 +8,7 @@ const maxSize = parseInt(process.env.LIMITED_SIZE);
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, 'uploads/');
+        cb(null, 'public/media/');
     },
     filename: function (req, file, cb) {
         cb(null, `${Date.now()}-${file.originalname}`);

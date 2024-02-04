@@ -16,7 +16,7 @@ const port = process.env.PORT || 3000;
 
 const app = express();
 
-app.use(express.static("public"));
+app.use(express.static("public/media"));
 app.set("port", port);
 
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerDocument))
