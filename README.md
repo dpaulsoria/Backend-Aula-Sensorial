@@ -4,78 +4,46 @@ Descripcion de la API
 ## Requisitos Previos
 - NodeJS: ^18.18.0
 - NPM: ^10.2.2
-- MySQL: ^8.0.35-ubuntu0.22.04.1 (Ubuntu)
+- Base de datos: MongoDB
 ## Instalacion, Configuracion y Primer Inicio
 Nota: Recuerda crear la carpeta uploads para que la subida de archivos funcione correctamente en el servidor.
 1. Clonar el repositorio `https://github.com/dpaulsoria/Backend-Aula-Sensorial.git`
 2. Acceder a la carpeta con `cd Backend-Aula-Sensorial`
 3. Instalar las dependencias con `npm install`
-4. Asegurarse de tener instalados los paquetes `mysql2`, `sequelize` y `sequelize-cli` tanto de forma local a nivel de proyecto, como de forma global en la PC con este comando `npm i -g mysql2 sequelize sequelize-cli` y `npm  i mysql2 sequelize sequelize-cli`
+4. Asegurarse de tener instalados los paquetes `mongoose` y `mongodb`
 5. Asegurarse de tener el .env correspondiente. Recordar utilizar los valores apropiados.
     ```
-    ACCESS_TOKEN_SECRET=secret
-    ACCESS_TOKEN_TIME=15m
-    REFRESH_TOKEN_SECRET=secret
-
-    # Para el entorno de desarrollo
-    DEV_DB_NAME=aula_sensorial
-    DEV_DB_USER=root
-    DEV_DB_PASSWORD=secret
-    DEV_DB_HOST=localhost
-
-    # Para el entorno de pruebas
-    TEST_DB_NAME=nombre_bd_pruebas
-    TEST_DB_USER=usuario_pruebas
-    TEST_DB_PASSWORD=contraseña_pruebas
-    TEST_DB_HOST=host_pruebas
-
-    # Para el entorno de producción
-    PROD_DB_NAME=aula_sensorial
-    PROD_DB_USER=klaeoeiwyw
-    PROD_DB_PASSWORD=secret
-    PROD_DB_HOST=aula-sensorial-server.mysql.database.azure.com
-
-    NODE_ENV=development
     PORT=3000
-
-    DEFAULT_USER=admin
-    DEFAULT_USER_PASSWORD=secret
-
+    NODE_ENV=development
+    HOST=localhost
     # File System
     EXCLUDED_EXTENSIONS=".exe,.bat,.cmd,.sh,.php,.pl,.py,.js,.vbs,.ps1,.psm1,.scr,.dll,.com,.jar,.vb,.jse,.wsf,.wsh,.sh,.bash,.msi,.reg,.gadget,.mdb,.accdb,.dbf,.sql,.bak,.docm,.xlsm,.pptm,.odt,.fodt,.uot,.rtf,.pdf,.zip,.rar,.7z,.tar,.gz,.tgz,.bz2,.ace,.uue"
     LIMITED_SIZE="1073741824" # Debe ser en bytes
+    DB_CON=mongodb+srv://root:hWva8k5eCSTULzLa@cluster0.fbbjfnx.mongodb.net/?retryWrites=true&w=majority
+    JWT_SECRET=secret
+    REFRESH_TOKEN_SECRET=secret
     ```
-6. Si el motor de base de datos esta instalado correctamente y el .env es el adecuado, empezar con crear la base de datos con `npm run create`. Recordar que tambien esta el comando `npm run drop` y `npm run migrate`.
-7. Correr la Main API con `npm run dev`
+6. La base de datos esta en la nube de mongo atlas.
+7. Comando para pruebas `npm run test`
+8. Correr la Main API con nodemon `npm run dev`
 8. Con respecto al sistema de almacenamiento de archivos
     - La carpeta de uploads debe tener ciertos permisos
     ```
-    ❯ chmod -R 775 uploads
-    ❯ ls -l | grep uploads
-    drwxrwxr-x haze haze 4.0 KB Sat Dec  9 01:04:47 2023 uploads
+    ❯ chmod -R 775 public/media
+    ❯ ls -l | grep public/media
+    drwxrwxr-x haze haze 4.0 KB Sat Dec  9 01:04:47 2023 public/media
     ```
-### Cosas que faltan
-Cómo Empezar: Ofrece una guía de inicio rápido que muestra cómo poner en marcha tu API después de la instalación.
 
-Uso: Describe cómo utilizar tu API. Incluye ejemplos de solicitudes y respuestas, y explica los diferentes endpoints y métodos disponibles (GET, POST, etc.).
-
-Documentación de la API: Detalla la documentación de tu API. Esto puede ser un enlace a una página de documentación externa o una sección dentro del README.
-
-Pruebas: Explica cómo ejecutar las pruebas unitarias y de integración para tu API, si las hay.
-
-Contribuir: Si estás abierto a contribuciones, incluye pautas sobre cómo otros pueden contribuir a tu proyecto.
-
-Licencia: Indica bajo qué licencia se distribuye tu API.
-
-Información de Contacto y Soporte: Proporciona detalles sobre cómo otros pueden contactarte para obtener soporte o más información.
-
-Capturas de Pantalla/Demos: Incluir capturas de pantalla o enlaces a demos puede ser útil para mostrar cómo funciona tu API.
-
-FAQs: Una sección de Preguntas Frecuentes puede ayudar a aclarar dudas comunes de los usuarios.
-
-Agradecimientos: Si deseas, puedes incluir agradecimientos a colaboradores, mentores, o recursos que fueron particularmente útiles.
-
-Este esquema es flexible y puedes adaptarlo según las necesidades específicas de tu proyecto y tu audiencia. Un README bien estructurado y completo es una parte esencial de cualquier proyecto de software, ya que ayuda a los usuarios y desarrolladores a entender y utilizar tu API de manera efectiva.
+## Documentacion
+Al desplegar la API se habilita la ruta /api-docs en la que se describen los escenarios de los endpoints y esquemas, se desarrolla con SWAGGER.  
+Cosas a tener en cuenta:
+-  MUY IMPORTANTE > Se deben crear los DEVICES antes del uso, es decir, si en el aula sensorial hay 3 parlantes, 2 pantallas y 2 luces, se deben crear utilizando los endpoints adecuados. De esta forma luego se pueden manejar sus cambios de estado. Revisar el esquema de los dispositivos.
+- La autenticacion de usuario funciona con un token almacenado en la base de datos
+- La contraseña se almacena hasheada en la base de datos.
+## Pruebas
+Para las pruebas se utiliza JEST y SUPERTEST, tan solo se debe correr el comando `npm run test`
+## Licencia
+La licencia usada es MIT
 
 
 
