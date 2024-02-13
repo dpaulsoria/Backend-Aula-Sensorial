@@ -3,8 +3,11 @@ require("dotenv").config();
 const mongoose = require("mongoose");
 const createError = require("http-errors");
 const express = require("express");
-const path = require("path");
+const axios = require("axios");
+const FormData = require("form-data");
 const fs = require("fs");
+const path = require("path");
+
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const cors = require("cors");
@@ -23,6 +26,41 @@ if (!fs.existsSync(mediaPath)) {
   fs.mkdirSync(mediaPath, { recursive: true });
   console.log("Carpeta public/media creada");
 }
+
+// Función para subir un archivo al servidor
+async function uploadFile(filePath, fileName) {
+  const formData = new FormData();
+  formData.append('file', fs.createReadStream(filePath));
+
+  try {
+    const response = await axios.post('https://backend-aula-sensorial.onrender.com/file/uploadFile', formData, {
+      headers: {
+        ...formData.getHeaders(),
+      },
+    });
+    console.log(`El archivo ${fileName} fue subido con éxito:`, response.data);
+  } catch (error) {
+    console.error(`Error al subir el archivo ${fileName}:`, error.response?.data || error.message);
+  }
+}
+
+
+// Función para recorrer recursivamente los archivos en un directorio y subcarpetas
+async function traverseDirectory(directory) {
+  const filesAndFolders = await fs.promises.readdir(directory, { withFileTypes: true });
+
+  for (let fileOrFolder of filesAndFolders) {
+    const fullPath = path.join(directory, fileOrFolder.name);
+    if (fileOrFolder.isDirectory()) {
+      await traverseDirectory(fullPath); // Si es una carpeta, llama recursivamente
+    } else {
+      await uploadFile(fullPath, fileOrFolder.name); // Si es un archivo, lo sube
+    }
+  }
+}
+
+// Inicia la carga de archivos
+traverseDirectory(path.join(__dirname, 'public', 'media'));
 
 app.use(express.static("public/media"));
 app.set("port", port);
