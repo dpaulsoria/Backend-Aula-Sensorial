@@ -14,13 +14,12 @@ const router = express.Router();
 router.get("/", async (req, res, next) => {
   res.json({ message: "Hola" });
 });
-
 /**
  * @swagger
  * /file/uploadFile:
  *   post:
- *     summary: Subir archivo multimedia
- *     description: Sube un archivo multimedia al servidor.
+ *     summary: Subir archivos multimedia
+ *     description: Sube hasta 20 archivos multimedia al servidor.
  *     tags:
  *       - File Management
  *     consumes:
@@ -31,7 +30,7 @@ router.get("/", async (req, res, next) => {
  *         type: string
  *         required: true
  *         default: multipart/form-data
- *         description: Tipo de contenido.
+ *         description: Tipo de contenido requerido para la carga de archivos.
  *     requestBody:
  *       required: true
  *       content:
@@ -40,12 +39,16 @@ router.get("/", async (req, res, next) => {
  *             type: object
  *             properties:
  *               file:
- *                 type: string
- *                 format: binary
- *                 description: Archivo multimedia a subir.
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                   format: binary
+ *                 description: Archivos multimedia a subir. Máximo 20 archivos.
+ *             required:
+ *               - file
  *     responses:
  *       '200':
- *         description: Archivo cargado con éxito.
+ *         description: Archivos cargados con éxito.
  *         content:
  *           application/json:
  *             schema:
@@ -55,7 +58,7 @@ router.get("/", async (req, res, next) => {
  *                   type: string
  *                   description: Mensaje de éxito.
  *       '400':
- *         description: Archivo no permitido o tamaño no permitido.
+ *         description: Archivo(s) no permitido(s) o tamaño no permitido.
  *         content:
  *           application/json:
  *             schema:
@@ -65,7 +68,7 @@ router.get("/", async (req, res, next) => {
  *                   type: string
  *                   description: Mensaje de error.
  *       '500':
- *         description: Error interno del servidor al intentar cargar el archivo.
+ *         description: Error interno del servidor al intentar cargar los archivos.
  *         content:
  *           application/json:
  *             schema:
@@ -76,24 +79,30 @@ router.get("/", async (req, res, next) => {
  *                   description: Mensaje de error.
  */
 
-router.post("/uploadFile", upload.single("file"), (req, res) => {
-  // El archivo se ha cargado con éxito y has aplicado el filtro y el límite de tamaño definidos en tu configuración de multer
-  // Mueve el archivo de la carpeta temporal a la carpeta de archivos públicos
-  const sourcePath = req.file.path;
-  const destinationPath = path.join(
-    __dirname,
-    "../public/media",
-    req.file.filename
-  );
+router.post("/uploadFile", upload.array("file", 20), (req, res) => {
+  if (req.files) {
+    req.files.forEach(file => {
+      const sourcePath = file.path;
+      const destinationPath = path.join(
+        __dirname,
+        "../public/media",
+        file.filename
+      );
 
-  fs.rename(sourcePath, destinationPath, err => {
-    if (err) {
-      console.error(err);
-      return res.status(500).json({ message: "Error al guardar el archivo" });
-    }
+      fs.rename(sourcePath, destinationPath, err => {
+        if (err) {
+          console.error(err);
+          return res
+            .status(500)
+            .json({ message: "Error al guardar el archivo" });
+        }
+      });
+    });
 
-    return res.status(200).json({ message: "File uploaded successfully" });
-  });
+    return res.status(200).json({ message: "Files uploaded successfully" });
+  } else {
+    return res.status(400).json({ message: "No files were uploaded." });
+  }
 });
 
 /**

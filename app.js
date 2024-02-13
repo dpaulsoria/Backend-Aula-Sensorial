@@ -27,40 +27,40 @@ if (!fs.existsSync(mediaPath)) {
   console.log("Carpeta public/media creada");
 }
 
-// Función para subir un archivo al servidor
-async function uploadFile(filePath, fileName) {
-  const formData = new FormData();
-  formData.append('file', fs.createReadStream(filePath));
+// // Función para subir un archivo al servidor
+// async function uploadFile(filePath, fileName) {
+//   const formData = new FormData();
+//   formData.append('file', fs.createReadStream(filePath));
 
-  try {
-    const response = await axios.post('https://backend-aula-sensorial.onrender.com/file/uploadFile', formData, {
-      headers: {
-        ...formData.getHeaders(),
-      },
-    });
-    console.log(`El archivo ${fileName} fue subido con éxito:`, response.data);
-  } catch (error) {
-    console.error(`Error al subir el archivo ${fileName}:`, error.response?.data || error.message);
-  }
-}
+//   try {
+//     const response = await axios.post('https://backend-aula-sensorial.onrender.com/file/uploadFile', formData, {
+//       headers: {
+//         ...formData.getHeaders(),
+//       },
+//     });
+//     console.log(`El archivo ${fileName} fue subido con éxito:`, response.data);
+//   } catch (error) {
+//     console.error(`Error al subir el archivo ${fileName}:`, error.response?.data || error.message);
+//   }
+// }
 
 
-// Función para recorrer recursivamente los archivos en un directorio y subcarpetas
-async function traverseDirectory(directory) {
-  const filesAndFolders = await fs.promises.readdir(directory, { withFileTypes: true });
+// // Función para recorrer recursivamente los archivos en un directorio y subcarpetas
+// async function traverseDirectory(directory) {
+//   const filesAndFolders = await fs.promises.readdir(directory, { withFileTypes: true });
 
-  for (let fileOrFolder of filesAndFolders) {
-    const fullPath = path.join(directory, fileOrFolder.name);
-    if (fileOrFolder.isDirectory()) {
-      await traverseDirectory(fullPath); // Si es una carpeta, llama recursivamente
-    } else {
-      await uploadFile(fullPath, fileOrFolder.name); // Si es un archivo, lo sube
-    }
-  }
-}
+//   for (let fileOrFolder of filesAndFolders) {
+//     const fullPath = path.join(directory, fileOrFolder.name);
+//     if (fileOrFolder.isDirectory()) {
+//       await traverseDirectory(fullPath); // Si es una carpeta, llama recursivamente
+//     } else {
+//       await uploadFile(fullPath, fileOrFolder.name); // Si es un archivo, lo sube
+//     }
+//   }
+// }
 
-// Inicia la carga de archivos
-traverseDirectory(path.join(__dirname, 'upload'));
+// // Inicia la carga de archivos
+// traverseDirectory(path.join(__dirname, 'upload'));
 
 app.use(express.static("public/media"));
 app.set("port", port);
