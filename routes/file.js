@@ -23,16 +23,23 @@ router.get("/", async (req, res, next) => {
  *     description: Sube un archivo multimedia al servidor.
  *     tags:
  *       - File Management
+ *     headers:
+ *       required: true
+ *       tag: Content-Type
+ *       content:
+ *         multipart/form-data
  *     requestBody:
  *       required: true
+ *       tag: file
  *       content:
- *         multipart/form-data:
+ *         multipart/form-data
+ *       body:
  *           schema:
  *             type: object
  *             properties:
  *               file:
  *                 type: string
- *                 format: binary
+ *                 format: form-data
  *                 description: Archivo multimedia a subir.
  *     responses:
  *       '200':
