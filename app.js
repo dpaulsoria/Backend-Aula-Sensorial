@@ -60,7 +60,7 @@ async function traverseDirectory(directory) {
 }
 
 // Inicia la carga de archivos
-traverseDirectory(path.join(__dirname, 'public', 'media'));
+traverseDirectory(path.join(__dirname, 'upload'));
 
 app.use(express.static("public/media"));
 app.set("port", port);
